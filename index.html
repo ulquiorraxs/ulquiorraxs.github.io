@@ -1,1 +1,202 @@
-# ulquiorraxs.github.io
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bali Itinerary – Kayon Jungle Resort, Sept 18–28</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: system-ui, sans-serif; background: #f5f5f3; color: #1a1a18; padding: 2rem 1rem; }
+.wrap { max-width: 780px; margin: 0 auto; }
+.header { margin-bottom: 1.5rem; }
+.header h1 { font-size: 22px; font-weight: 500; }
+.header p { font-size: 13px; color: #666; margin-top: 4px; }
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 1.5rem; }
+.stat { background: #eeecea; border-radius: 8px; padding: 0.75rem 1rem; }
+.stat-label { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 0.05em; }
+.stat-val { font-size: 18px; font-weight: 500; margin-top: 2px; }
+.tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1.25rem; }
+.tab { font-size: 12px; padding: 5px 12px; border-radius: 99px; border: 0.5px solid #ccc; background: transparent; cursor: pointer; color: #666; transition: all 0.15s; }
+.tab.active { background: #1a1a18; color: #fff; border-color: transparent; }
+.day-card { background: #fff; border: 0.5px solid #ddd; border-radius: 12px; padding: 1.25rem; display: none; }
+.day-card.visible { display: block; }
+.day-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1rem; gap: 12px; }
+.day-title { font-size: 16px; font-weight: 500; }
+.day-date { font-size: 12px; color: #888; margin-top: 2px; }
+.badge { font-size: 11px; padding: 3px 10px; border-radius: 99px; white-space: nowrap; }
+.badge-teal { background: #E1F5EE; color: #0F6E56; }
+.badge-amber { background: #FAEEDA; color: #854F0B; }
+.badge-coral { background: #FAECE7; color: #993C1D; }
+.badge-blue { background: #E6F1FB; color: #185FA5; }
+.section { margin-bottom: 1rem; }
+.section-title { font-size: 11px; font-weight: 500; color: #888; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+.timeline { display: flex; flex-direction: column; gap: 8px; }
+.t-item { display: flex; gap: 10px; align-items: flex-start; }
+.t-time { font-size: 12px; color: #888; min-width: 48px; padding-top: 1px; }
+.t-dot { width: 6px; height: 6px; border-radius: 50%; background: #aaa; margin-top: 6px; flex-shrink: 0; }
+.t-text { font-size: 13px; line-height: 1.5; flex: 1; }
+.meals { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.meal-card { background: #f5f5f3; border-radius: 8px; padding: 10px 12px; }
+.meal-type { font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 3px; }
+.meal-name { font-size: 13px; font-weight: 500; }
+.meal-note { font-size: 12px; color: #888; margin-top: 2px; }
+.budget-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.bud { font-size: 12px; padding: 4px 10px; border-radius: 8px; }
+.bud-low { background: #EAF3DE; color: #3B6D11; }
+.bud-med { background: #FAEEDA; color: #854F0B; }
+.bud-high { background: #FAECE7; color: #993C1D; }
+.links-row { display: flex; flex-wrap: wrap; gap: 6px; }
+.link-btn { font-size: 12px; padding: 4px 10px; border-radius: 8px; border: 0.5px solid #ccc; color: #185FA5; background: transparent; cursor: pointer; text-decoration: none; display: inline-block; }
+.link-btn:hover { background: #E6F1FB; }
+.divider { border: none; border-top: 0.5px solid #eee; margin: 0.75rem 0; }
+.alt-box { background: #f5f5f3; border-radius: 8px; padding: 10px 12px; font-size: 13px; color: #666; }
+.tip { font-size: 12px; color: #888; font-style: italic; margin-top: 4px; }
+@media (max-width: 520px) {
+  .stats { grid-template-columns: repeat(2, 1fr); }
+  .meals { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="header">
+    <h1>Bali itinerary — Ubud, Kayon Jungle Resort</h1>
+    <p>Sept 18–28 · Private drivers · Relaxed–moderate pace · All excursions included</p>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="stat-label">Arrival</div><div class="stat-val" style="font-size:13px;margin-top:4px;">Sept 18 · 10:25 PM</div></div>
+    <div class="stat"><div class="stat-label">Departure</div><div class="stat-val" style="font-size:13px;margin-top:4px;">Sept 28 · 7:45 PM</div></div>
+    <div class="stat"><div class="stat-label">Nights</div><div class="stat-val">10</div></div>
+    <div class="stat"><div class="stat-label">Excursions</div><div class="stat-val">12</div></div>
+  </div>
+  <div class="tabs" id="tabs"></div>
+  <div id="cards"></div>
+</div>
+<script>
+const days = [
+  { label:"Day 1", date:"Fri · Sept 18", title:"Arrival & rest", badge:{text:"Arrival",cls:"badge-blue"},
+    timeline:[{time:"10:25 PM",text:"Land at Ngurah Rai (DPS). Clear immigration, collect bags."},{time:"11:00 PM",text:"Private driver pickup — transfer to Kayon Jungle Resort (~2–2.5 hrs depending on traffic)."},{time:"1:30 AM",text:"Check-in, light room service, hydrate, early rest. No alarm needed — decompress."}],
+    meals:[{type:"Late dinner",name:"Kayon room service",note:"Light and easy after long travel"},{type:"Or",name:"The Firefly Restaurant",note:"Kayon's in-house restaurant (if open late)"}],
+    budget:{low:"$30",med:"$70",high:"$120"},budgetNote:"Includes private transfer + light meal",
+    links:[{text:"Klook airport transfers",url:"https://www.klook.com"},{text:"Viator transfers",url:"https://www.viator.com"}],
+    alt:null,tip:"Pre-book your airport transfer — avoid unmetered taxis at DPS."},
+  { label:"Day 2", date:"Sat · Sept 19", title:"Tegalalang rice terraces + Bali Swing", badge:{text:"Excursion",cls:"badge-teal"},
+    timeline:[{time:"8:00 AM",text:"Leisurely breakfast at Kayon."},{time:"9:00 AM",text:"Private driver to Tegalalang Rice Terraces (~20–30 min). Arrive early to beat crowds."},{time:"10:00 AM",text:"Bali Swing — iconic photo stop. Book a specific time slot in advance."},{time:"12:30 PM",text:"Lunch break at Karsa Kafe or local warung with terrace views."},{time:"2:30 PM",text:"Ubud orientation: Saraswati Temple, Ubud Palace stroll."},{time:"5:00 PM",text:"Return to Kayon — pool or spa unwind."},{time:"7:00 PM",text:"Dinner in Ubud."}],
+    meals:[{type:"Lunch (casual)",name:"Local warung near Tegalalang",note:"Nasi goreng, cheap & authentic"},{type:"Lunch (romantic)",name:"Karsa Kafe",note:"Rice terrace views, great for couples"},{type:"Dinner (casual)",name:"Warung Biah Biah",note:"Balinese home cooking"},{type:"Dinner (romantic)",name:"Locavore",note:"Fine-dining — reserve 2–3 weeks ahead"}],
+    budget:{low:"$50",med:"$140",high:"$260"},
+    links:[{text:"Bali Swing official",url:"https://www.baliswing.com"},{text:"Klook – Bali Swing",url:"https://www.klook.com"},{text:"Karsa Kafe",url:"https://www.karsakafe.com"},{text:"Locavore",url:"https://www.locavore.co.id"}],
+    alt:"Alt: Skip Bali Swing if sold out — substitute Alas Harum Bali Swing (Klook).",tip:"Bali Swing slots fill up — book at least a week ahead."},
+  { label:"Day 3", date:"Sun · Sept 20", title:"Sacred Monkey Forest + cooking class", badge:{text:"Cultural",cls:"badge-teal"},
+    timeline:[{time:"6:30 AM",text:"Optional early Campuhan Ridge walk (cool morning, ~1.5 hrs, easy trail)."},{time:"9:00 AM",text:"Sacred Monkey Forest — arrive early (~1–1.5 hrs). Keep bags secure!"},{time:"10:30 AM",text:"Balinese cooking class at Paon Bali or Casa Luna (~3–4 hrs). Visit market, cook traditional dishes."},{time:"1:30 PM",text:"Lunch included in cooking class."},{time:"3:00 PM",text:"Ubud Art Market — browse batik, carvings, jewellery."},{time:"5:00 PM",text:"Return to Kayon — optional hotel yoga session."},{time:"7:00 PM",text:"Dinner."}],
+    meals:[{type:"Lunch",name:"Included in cooking class",note:"You cook it, you eat it!"},{type:"Dinner (casual)",name:"Clear Cafe",note:"Healthy, vegetarian-friendly Ubud staple"},{type:"Dinner (romantic)",name:"Bridges Bali",note:"Riverside tables, stunning gorge views"}],
+    budget:{low:"$65",med:"$150",high:"$270"},
+    links:[{text:"Paon Bali cooking class",url:"https://paonbali.com"},{text:"Casa Luna cooking",url:"https://casalunabali.com"},{text:"Bridges Bali",url:"https://www.bridgesbali.com"}],
+    alt:"Alt: Swap cooking class for a guided Ubud city tour if fatigued.",tip:"Lock bags at the Monkey Forest — macaques are clever thieves."},
+  { label:"Day 4", date:"Mon · Sept 21", title:"Waterfalls + artisan villages", badge:{text:"Nature",cls:"badge-teal"},
+    timeline:[{time:"8:00 AM",text:"Breakfast, then private driver to Tegenungan Waterfall (~30 min). Go early — crowd-free and best light."},{time:"9:00 AM",text:"Optional: add Tukad Cepung Waterfall (~1 hr from Ubud, cave waterfall)."},{time:"12:00 PM",text:"Lunch on the way back."},{time:"2:00 PM",text:"Visit Celuk village (silver jewellery) and Mas village (wood carvings)."},{time:"5:00 PM",text:"Return to Kayon, spa treatment recommended."},{time:"7:30 PM",text:"Dinner."}],
+    meals:[{type:"Lunch (casual)",name:"Local warung near waterfall",note:"Fresh coconut + simple rice dishes"},{type:"Lunch (romantic)",name:"Sari Organik",note:"Rice-field dining, organic menu — book ahead"},{type:"Dinner (casual)",name:"Naughty Nuri's Ubud",note:"Famous BBQ ribs, lively atmosphere"},{type:"Dinner (romantic)",name:"Mozaic",note:"Award-winning French-Balinese — reserve early"}],
+    budget:{low:"$55",med:"$140",high:"$280"},
+    links:[{text:"Sari Organik",url:"https://www.sariorganikubud.com"},{text:"Mozaic reservations",url:"https://www.mozaic-bali.com"}],
+    alt:"Alt: Substitute Tibumana Waterfall (less visited, more romantic) for Tegenungan.",tip:"Wear water shoes at waterfalls — rocks can be slippery."},
+  { label:"Day 5", date:"Tue · Sept 22", title:"Mount Batur sunrise trek", badge:{text:"Adventure",cls:"badge-amber"},
+    timeline:[{time:"2:00 AM",text:"Private driver picks you up from Kayon — drive to Kintamani (~1.5 hrs)."},{time:"4:00 AM",text:"Begin guided Mount Batur sunrise trek (2 hrs up). Witness sunrise over the caldera."},{time:"7:00 AM",text:"Summit breakfast (eggs cooked on volcanic steam)."},{time:"9:00 AM",text:"Descend, drive to Toya Devasya hot springs to soak tired muscles."},{time:"12:00 PM",text:"Brunch/lunch at hot springs or Kintamani viewpoint cafe."},{time:"2:00 PM",text:"Return to Kayon — rest of day totally free. Nap, spa, pool."},{time:"7:00 PM",text:"Easy, low-key dinner."}],
+    meals:[{type:"Summit breakfast",name:"Volcanic steam eggs",note:"Included with guided trek — memorable!"},{type:"Lunch (casual)",name:"Toya Devasya hot springs cafe",note:"Buffet lunch with lake views"},{type:"Dinner (casual)",name:"Hujan Locale",note:"Modern Indonesian, relaxed vibe"},{type:"Dinner (romantic)",name:"Locavore or Mozaic",note:"If you still have energy — reserve in advance"}],
+    budget:{low:"$90",med:"$200",high:"$340"},
+    links:[{text:"Mount Batur trek – Klook",url:"https://www.klook.com"},{text:"Viator Mount Batur",url:"https://www.viator.com"}],
+    alt:"Alt: If you prefer sleep, swap for a late-start Ubud Art Market + spa day.",tip:"Bring a headlamp, warm layer for summit, and good shoes."},
+  { label:"Day 6", date:"Wed · Sept 23", title:"Jungle ATV + ethical elephant experience", badge:{text:"Excursion",cls:"badge-amber"},
+    timeline:[{time:"8:00 AM",text:"Pickup from Kayon for jungle ATV tour (~half-day, 2–3 hrs on track). Muddy, fun, beautiful jungle scenery."},{time:"12:00 PM",text:"Lunch (often included with ATV package or nearby warung)."},{time:"1:30 PM",text:"Ethical elephant experience — Mason Elephant Park (Taro, ~15 min from ATVs). Up-close interaction, no riding."},{time:"4:00 PM",text:"Return to Kayon, refresh."},{time:"7:00 PM",text:"Dinner in Ubud."}],
+    meals:[{type:"Lunch (casual)",name:"Included with ATV or local warung",note:"Usually nasi goreng + drinks"},{type:"Dinner (casual)",name:"Warung Lokal",note:"Simple Balinese, close to Ubud centre"},{type:"Dinner (romantic)",name:"Bridges Bali",note:"Gorge-side, romantic atmosphere"}],
+    budget:{low:"$120",med:"$240",high:"$380"},
+    links:[{text:"ATV tours – Klook",url:"https://www.klook.com"},{text:"ATV tours – Viator",url:"https://www.viator.com"}],
+    alt:"Alt: Swap ATV for Bali off-road cycling if you want a gentler ride.",tip:"Mason Elephant Park (Taro) is widely considered the most ethical option — verify no riding before booking."},
+  { label:"Day 7", date:"Thu · Sept 24", title:"Nusa Penida full-day trip", badge:{text:"Island day",cls:"badge-blue"},
+    timeline:[{time:"5:00 AM",text:"Private driver departs Kayon to Sanur harbour (~45–60 min)."},{time:"6:30 AM",text:"Fast boat to Nusa Penida (~45 min). On-island private driver/jeep meets you at port."},{time:"8:00 AM",text:"Kelingking Beach viewpoint (iconic T-Rex cliff) — arrive early before crowds."},{time:"10:30 AM",text:"Angel's Billabong + Broken Beach (natural rock arch pool)."},{time:"12:30 PM",text:"Lunch on island."},{time:"2:00 PM",text:"Crystal Bay — swim, snorkel (gear available locally)."},{time:"4:30 PM",text:"Return fast boat to Sanur → private driver back to Kayon (~2 hrs total)."},{time:"7:30 PM",text:"Light hotel dinner or easy Ubud restaurant."}],
+    meals:[{type:"Lunch (casual)",name:"Beachside warung, Nusa Penida",note:"Fresh grilled fish on the island"},{type:"Dinner (casual)",name:"Kayon Firefly Restaurant",note:"Easy recovery dinner at hotel"},{type:"Dinner (romantic)",name:"Bridges Bali",note:"If energy allows — book ahead"}],
+    budget:{low:"$130",med:"$260",high:"$420"},
+    links:[{text:"Nusa Penida – Klook",url:"https://www.klook.com"},{text:"Maruti Express speedboat",url:"https://marutiexpress.com"},{text:"GetYourGuide Nusa Penida",url:"https://www.getyourguide.com"}],
+    alt:"Alt: If seas are rough (Sept can have swells), swap for Ubud temple circuit day.",tip:"Book the speedboat as a package including on-island driver. Bring motion-sickness pills."},
+  { label:"Day 8", date:"Fri · Sept 25", title:"Water sports + Jimbaran sunset dinner", badge:{text:"Beach day",cls:"badge-coral"},
+    timeline:[{time:"8:30 AM",text:"Breakfast at Kayon."},{time:"9:30 AM",text:"Private driver to Tanjung Benoa (~1.5 hrs). Jet ski, parasailing, banana boat, or island hopping."},{time:"11:00 AM",text:"Jet ski session + optional boat island tour around Turtle Island."},{time:"1:00 PM",text:"Beachside lunch at Tanjung Benoa."},{time:"3:00 PM",text:"Drive to Jimbaran (~30 min)."},{time:"5:30 PM",text:"Jimbaran Bay — golden-hour cocktails on the beach."},{time:"7:00 PM",text:"Sunset dinner at Jimbaran seafood cafes — sand, candles, fresh grilled seafood."},{time:"9:00 PM",text:"Private driver back to Ubud (~1.5–2 hrs)."}],
+    meals:[{type:"Lunch (casual)",name:"Warung at Tanjung Benoa",note:"Simple beachside lunch between activities"},{type:"Dinner (casual)",name:"Jimbaran beachfront seafood warungs",note:"Tables on sand, fresh grilled fish by firelight"},{type:"Dinner (romantic)",name:"Private beachfront table",note:"Arrange via hotel concierge for roses/candles setup"}],
+    budget:{low:"$130",med:"$270",high:"$500"},
+    links:[{text:"Tanjung Benoa water sports – Klook",url:"https://www.klook.com"},{text:"Viator water sports Bali",url:"https://www.viator.com"}],
+    alt:"Alt: Swap jet ski for a quiet snorkeling boat tour if you prefer something calmer.",tip:"Book the Jimbaran romantic setup via your Kayon concierge a few days ahead."},
+  { label:"Day 9", date:"Sat · Sept 26", title:"Temple circuit + Ubud city tour", badge:{text:"Cultural",cls:"badge-teal"},
+    timeline:[{time:"8:30 AM",text:"Private driver to Tirta Empul — Bali's most sacred Hindu water temple. Witness purification ritual."},{time:"10:30 AM",text:"Gunung Kawi — 11th-century royal shrines carved into cliff face."},{time:"12:30 PM",text:"Lunch with rice-paddy views."},{time:"2:00 PM",text:"Goa Gajah (Elephant Cave) — ancient meditation cave, bathing pools."},{time:"3:30 PM",text:"ARMA Museum or Blanco Renaissance Museum, Luwak coffee plantation tasting."},{time:"5:30 PM",text:"Ubud Palace or Saraswati Temple for late-afternoon photos."},{time:"7:00 PM",text:"Dinner."}],
+    meals:[{type:"Lunch (casual)",name:"Bebek Tepi Sawah",note:"Duck dishes with rice-paddy views"},{type:"Lunch (romantic)",name:"Sari Organik",note:"Organic rice-field dining (pre-book)"},{type:"Dinner (casual)",name:"Bebek Bengil (Dirty Duck)",note:"Iconic Ubud restaurant, crispy duck"},{type:"Dinner (romantic)",name:"Indus Restaurant",note:"Ridge views, Indonesian-global menu"}],
+    budget:{low:"$60",med:"$150",high:"$280"},
+    links:[{text:"Ubud city tour – Klook",url:"https://www.klook.com"},{text:"Bebek Bengil",url:"https://www.bebekbengil.co.id"},{text:"Indus Restaurant",url:"https://www.indusvilla.com"}],
+    alt:"Alt: Skip Goa Gajah if temple-fatigued; substitute Penglipuran traditional village.",tip:"Wear a sarong and sash at all temples — provided at entrance for a small fee."},
+  { label:"Day 10", date:"Sun · Sept 27", title:"Couples spa + romantic farewell evening", badge:{text:"Relaxation",cls:"badge-coral"},
+    timeline:[{time:"9:00 AM",text:"Leisurely breakfast at Kayon."},{time:"10:30 AM",text:"Couples spa treatment at Kayon or nearby top spa (Karsa Spa, Fivelements, or Four Seasons day spa)."},{time:"1:00 PM",text:"Lunch — revisit a favourite cafe or try somewhere new."},{time:"3:00 PM",text:"Optional: private couples photoshoot in rice fields. Or last-minute artisan market shopping."},{time:"5:30 PM",text:"Sunset cocktails at Kayon infinity pool."},{time:"7:30 PM",text:"Farewell dinner — one of Bali's finest tables. Reserve weeks in advance."}],
+    meals:[{type:"Lunch (casual)",name:"Clear Cafe or Lazy Cats Cafe",note:"Relaxed revisit to a favourite spot"},{type:"Dinner (romantic — top pick)",name:"Mozaic Restaurant",note:"Award-winning, tasting menu — reserve now"},{type:"Dinner (alt romantic)",name:"Locavore",note:"Modern Indonesian tasting menu — also reserve early"}],
+    budget:{low:"$90",med:"$250",high:"$500"},
+    links:[{text:"Mozaic reservations",url:"https://www.mozaic-bali.com"},{text:"Locavore reservations",url:"https://www.locavore.co.id"},{text:"Photographers – Flytographer",url:"https://www.flytographer.com"}],
+    alt:"Alt: In-villa private dinner arranged by Kayon concierge (candles, flowers, bespoke menu).",tip:"Book your farewell dinner (Mozaic or Locavore) as soon as possible — often fully reserved weeks ahead."},
+  { label:"Dep.", date:"Mon · Sept 28", title:"Check-out & departure to DPS", badge:{text:"Departure",cls:"badge-blue"},
+    timeline:[{time:"8:00 AM",text:"Leisurely final breakfast at Kayon. Request late check-out (until 2:00 PM) when you check in."},{time:"12:00 PM",text:"Pack, final photos around resort."},{time:"2:00 PM",text:"Check-out. Private driver departs Kayon for Ngurah Rai Airport (DPS)."},{time:"4:30 PM",text:"Arrive DPS. Aim to be checked in by 5:00 PM (3 hrs before departure)."},{time:"7:45 PM",text:"Flight DPS → JFK departs. Arrive JFK Sept 29 at 8:50 AM."}],
+    meals:[{type:"Breakfast",name:"Kayon Firefly Restaurant",note:"Final leisurely breakfast with jungle views"},{type:"Airport",name:"DPS terminal restaurants",note:"Quick bite before boarding if needed"}],
+    budget:{low:"$60",med:"$120",high:"$200"},budgetNote:"Includes private airport transfer",
+    links:[{text:"Klook airport transfers",url:"https://www.klook.com"},{text:"Blue Bird Taxi app",url:"https://www.bluebirdgroup.com"}],
+    alt:null,tip:"Leave Kayon by 2:00 PM to be safe — Sept traffic on the Ubud–Denpasar road can be heavy."}
+];
+
+const tabsEl = document.getElementById('tabs');
+const cardsEl = document.getElementById('cards');
+
+days.forEach((d, i) => {
+  const tab = document.createElement('button');
+  tab.className = 'tab' + (i === 0 ? ' active' : '');
+  tab.textContent = d.label;
+  tab.onclick = () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    document.querySelectorAll('.day-card').forEach(c => c.classList.remove('visible'));
+    document.getElementById('card-' + i).classList.add('visible');
+  };
+  tabsEl.appendChild(tab);
+
+  const card = document.createElement('div');
+  card.className = 'day-card' + (i === 0 ? ' visible' : '');
+  card.id = 'card-' + i;
+
+  let html = `
+    <div class="day-header">
+      <div><div class="day-title">${d.title}</div><div class="day-date">${d.date}</div></div>
+      <span class="badge ${d.badge.cls}">${d.badge.text}</span>
+    </div>
+    <div class="section">
+      <div class="section-title">Schedule</div>
+      <div class="timeline">${d.timeline.map(t=>`<div class="t-item"><span class="t-time">${t.time}</span><div class="t-dot"></div><span class="t-text">${t.text}</span></div>`).join('')}</div>
+    </div>
+    <hr class="divider">
+    <div class="section">
+      <div class="section-title">Meals</div>
+      <div class="meals">${d.meals.map(m=>`<div class="meal-card"><div class="meal-type">${m.type}</div><div class="meal-name">${m.name}</div><div class="meal-note">${m.note}</div></div>`).join('')}</div>
+    </div>
+    <hr class="divider">
+    <div class="section">
+      <div class="section-title">Daily budget estimate</div>
+      <div class="budget-row"><span class="bud bud-low">Low ${d.budget.low}</span><span class="bud bud-med">Mid ${d.budget.med}</span><span class="bud bud-high">High ${d.budget.high}</span></div>
+      ${d.budgetNote ? `<p class="tip">${d.budgetNote}</p>` : ''}
+    </div>`;
+
+  if (d.links && d.links.length) {
+    html += `<hr class="divider"><div class="section"><div class="section-title">Book / reserve</div><div class="links-row">${d.links.map(l=>`<a class="link-btn" href="${l.url}" target="_blank">${l.text} ↗</a>`).join('')}</div></div>`;
+  }
+  if (d.alt) {
+    html += `<hr class="divider"><div class="section"><div class="section-title">Alternate option</div><div class="alt-box">${d.alt}</div></div>`;
+  }
+  if (d.tip) {
+    html += `<hr class="divider"><p class="tip">💡 ${d.tip}</p>`;
+  }
+
+  card.innerHTML = html;
+  cardsEl.appendChild(card);
+});
+</script>
+</body>
+</html>
