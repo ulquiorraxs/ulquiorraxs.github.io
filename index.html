@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -143,10 +142,10 @@ const days = [
     links:[{text:"Klook airport transfers",url:"https://www.klook.com"},{text:"Blue Bird Taxi app",url:"https://www.bluebirdgroup.com"}],
     alt:null,tip:"Leave Kayon by 2:00 PM to be safe — Sept traffic on the Ubud–Denpasar road can be heavy."}
 ];
-
+ 
 const tabsEl = document.getElementById('tabs');
 const cardsEl = document.getElementById('cards');
-
+ 
 days.forEach((d, i) => {
   const tab = document.createElement('button');
   tab.className = 'tab' + (i === 0 ? ' active' : '');
@@ -158,11 +157,11 @@ days.forEach((d, i) => {
     document.getElementById('card-' + i).classList.add('visible');
   };
   tabsEl.appendChild(tab);
-
+ 
   const card = document.createElement('div');
   card.className = 'day-card' + (i === 0 ? ' visible' : '');
   card.id = 'card-' + i;
-
+ 
   let html = `
     <div class="day-header">
       <div><div class="day-title">${d.title}</div><div class="day-date">${d.date}</div></div>
@@ -183,7 +182,7 @@ days.forEach((d, i) => {
       <div class="budget-row"><span class="bud bud-low">Low ${d.budget.low}</span><span class="bud bud-med">Mid ${d.budget.med}</span><span class="bud bud-high">High ${d.budget.high}</span></div>
       ${d.budgetNote ? `<p class="tip">${d.budgetNote}</p>` : ''}
     </div>`;
-
+ 
   if (d.links && d.links.length) {
     html += `<hr class="divider"><div class="section"><div class="section-title">Book / reserve</div><div class="links-row">${d.links.map(l=>`<a class="link-btn" href="${l.url}" target="_blank">${l.text} ↗</a>`).join('')}</div></div>`;
   }
@@ -193,10 +192,119 @@ days.forEach((d, i) => {
   if (d.tip) {
     html += `<hr class="divider"><p class="tip">💡 ${d.tip}</p>`;
   }
-
+ 
   card.innerHTML = html;
   cardsEl.appendChild(card);
 });
+</script>
+ 
+<!-- Weather Section -->
+<div class="wrap" style="margin-top: 2rem;">
+  <div style="background:#fff; border: 0.5px solid #ddd; border-radius: 12px; padding: 1.25rem;">
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; flex-wrap:gap;">
+      <div>
+        <div style="font-size:16px; font-weight:500;">Ubud weather forecast</div>
+        <div style="font-size:12px; color:#888; margin-top:2px;">Bali, Indonesia · Updated live</div>
+      </div>
+      <button onclick="fetchWeather()" style="font-size:12px; padding:5px 14px; border-radius:99px; border:0.5px solid #ccc; background:transparent; cursor:pointer;">↻ Refresh</button>
+    </div>
+    <div id="weather-content">
+      <div id="weather-loading" style="font-size:13px; color:#888; padding: 1rem 0;">Loading weather data...</div>
+      <div id="weather-error" style="display:none; font-size:13px; color:#993C1D; padding:0.5rem 0;"></div>
+      <div id="weather-data" style="display:none;">
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap:10px; margin-bottom:1rem;" id="current-weather"></div>
+        <hr style="border:none; border-top:0.5px solid #eee; margin: 0.75rem 0;">
+        <div style="font-size:11px; font-weight:500; color:#888; text-transform:uppercase; letter-spacing:0.07em; margin-bottom:8px;">7-day forecast</div>
+        <div style="display:flex; gap:8px; overflow-x:auto; padding-bottom:4px;" id="forecast-row"></div>
+      </div>
+    </div>
+  </div>
+</div>
+ 
+<script>
+const WMO_CODES = {
+  0:"Clear sky",1:"Mainly clear",2:"Partly cloudy",3:"Overcast",
+  45:"Foggy",48:"Icy fog",51:"Light drizzle",53:"Drizzle",55:"Heavy drizzle",
+  61:"Light rain",63:"Rain",65:"Heavy rain",71:"Light snow",73:"Snow",75:"Heavy snow",
+  80:"Rain showers",81:"Heavy showers",82:"Violent showers",
+  95:"Thunderstorm",96:"Thunderstorm w/ hail",99:"Thunderstorm w/ heavy hail"
+};
+const WMO_EMOJI = {
+  0:"☀️",1:"🌤",2:"⛅",3:"☁️",45:"🌫",48:"🌫",
+  51:"🌦",53:"🌦",55:"🌧",61:"🌧",63:"🌧",65:"🌧",
+  71:"❄️",73:"❄️",75:"❄️",80:"🌦",81:"🌧",82:"⛈",
+  95:"⛈",96:"⛈",99:"⛈"
+};
+ 
+function dayName(dateStr) {
+  const d = new Date(dateStr);
+  return d.toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric' });
+}
+ 
+async function fetchWeather() {
+  document.getElementById('weather-loading').style.display = 'block';
+  document.getElementById('weather-data').style.display = 'none';
+  document.getElementById('weather-error').style.display = 'none';
+ 
+  try {
+    // Ubud, Bali coordinates
+    const lat = -8.5069, lon = 115.2625;
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m,precipitation&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum&timezone=Asia%2FSingapore&forecast_days=7&temperature_unit=celsius`;
+ 
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('Weather fetch failed');
+    const data = await res.json();
+ 
+    const c = data.current;
+    const code = c.weather_code;
+ 
+    document.getElementById('current-weather').innerHTML = `
+      <div style="background:#f5f5f3;border-radius:8px;padding:12px;text-align:center;">
+        <div style="font-size:28px;">${WMO_EMOJI[code] || '🌡'}</div>
+        <div style="font-size:22px;font-weight:500;margin-top:4px;">${Math.round(c.temperature_2m)}°C</div>
+        <div style="font-size:12px;color:#888;margin-top:2px;">${WMO_CODES[code] || 'Unknown'}</div>
+      </div>
+      <div style="background:#f5f5f3;border-radius:8px;padding:12px;">
+        <div style="font-size:11px;color:#888;text-transform:uppercase;letter-spacing:0.05em;">Humidity</div>
+        <div style="font-size:20px;font-weight:500;margin-top:4px;">${c.relative_humidity_2m}%</div>
+        <div style="font-size:12px;color:#888;margin-top:2px;">Relative humidity</div>
+      </div>
+      <div style="background:#f5f5f3;border-radius:8px;padding:12px;">
+        <div style="font-size:11px;color:#888;text-transform:uppercase;letter-spacing:0.05em;">Wind</div>
+        <div style="font-size:20px;font-weight:500;margin-top:4px;">${Math.round(c.wind_speed_10m)} km/h</div>
+        <div style="font-size:12px;color:#888;margin-top:2px;">Wind speed</div>
+      </div>
+      <div style="background:#f5f5f3;border-radius:8px;padding:12px;">
+        <div style="font-size:11px;color:#888;text-transform:uppercase;letter-spacing:0.05em;">Precipitation</div>
+        <div style="font-size:20px;font-weight:500;margin-top:4px;">${c.precipitation} mm</div>
+        <div style="font-size:12px;color:#888;margin-top:2px;">Current hour</div>
+      </div>
+    `;
+ 
+    const forecastHTML = data.daily.time.map((date, i) => {
+      const dcode = data.daily.weather_code[i];
+      return `
+        <div style="background:#f5f5f3;border-radius:8px;padding:10px 12px;min-width:100px;flex-shrink:0;text-align:center;">
+          <div style="font-size:11px;color:#888;">${dayName(date)}</div>
+          <div style="font-size:22px;margin:6px 0;">${WMO_EMOJI[dcode] || '🌡'}</div>
+          <div style="font-size:13px;font-weight:500;">${Math.round(data.daily.temperature_2m_max[i])}°</div>
+          <div style="font-size:12px;color:#aaa;">${Math.round(data.daily.temperature_2m_min[i])}°</div>
+          <div style="font-size:11px;color:#185FA5;margin-top:4px;">${data.daily.precipitation_sum[i]}mm</div>
+        </div>`;
+    }).join('');
+ 
+    document.getElementById('forecast-row').innerHTML = forecastHTML;
+    document.getElementById('weather-loading').style.display = 'none';
+    document.getElementById('weather-data').style.display = 'block';
+ 
+  } catch(e) {
+    document.getElementById('weather-loading').style.display = 'none';
+    document.getElementById('weather-error').style.display = 'block';
+    document.getElementById('weather-error').textContent = 'Could not load weather. Check your internet connection and try again.';
+  }
+}
+ 
+fetchWeather();
 </script>
 </body>
 </html>
