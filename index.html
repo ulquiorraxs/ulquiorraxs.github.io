@@ -34,9 +34,9 @@ body::before {
 .stat { background: rgba(255,255,255,0.12); backdrop-filter: blur(8px); border: 0.5px solid rgba(255,255,255,0.25); }
 .stat-label { color: rgba(255,255,255,0.65); }
 .stat-val { color: #fff; }
-.tab { border-color: rgba(255,255,255,0.35); color: rgba(255,255,255,0.8); background: rgba(255,255,255,0.08); backdrop-filter: blur(6px); }
-.tab:hover { background: rgba(255,255,255,0.2); }
-.tab.active { background: #fff; color: #1a1a18; border-color: transparent; }
+.tab { border-color: rgba(255,255,255,0.6); color: #fff; background: rgba(0,0,0,0.55); backdrop-filter: blur(8px); font-weight: 500; text-shadow: 0 1px 3px rgba(0,0,0,0.6); }
+.tab:hover { background: rgba(0,0,0,0.72); border-color: rgba(255,255,255,0.8); }
+.tab.active { background: #fff; color: #1a1a18; border-color: transparent; font-weight: 600; text-shadow: none; }
 .day-card { background: rgba(255,255,255,0.92); backdrop-filter: blur(12px); border: 0.5px solid rgba(255,255,255,0.5); }
 .wrap { max-width: 780px; margin: 0 auto; }
 .header { margin-bottom: 1.5rem; }
@@ -98,79 +98,268 @@ body::before {
     <div class="stat"><div class="stat-label">Arrival</div><div class="stat-val" style="font-size:13px;margin-top:4px;">Sept 18 · 10:25 PM</div></div>
     <div class="stat"><div class="stat-label">Departure</div><div class="stat-val" style="font-size:13px;margin-top:4px;">Sept 28 · 7:45 PM</div></div>
     <div class="stat"><div class="stat-label">Nights</div><div class="stat-val">10</div></div>
-    <div class="stat"><div class="stat-label">Excursions</div><div class="stat-val">12</div></div>
+    <div class="stat"><div class="stat-label">Excursions</div><div class="stat-val">8</div></div>
   </div>
   <div class="tabs" id="tabs"></div>
   <div id="cards"></div>
 </div>
 <script>
 const days = [
-  { label:"Day 1", date:"Fri · Sept 18", title:"Arrival & rest", badge:{text:"Arrival",cls:"badge-blue"},
-    timeline:[{time:"10:25 PM",text:"Land at Ngurah Rai (DPS). Clear immigration, collect bags."},{time:"11:00 PM",text:"Private driver pickup — transfer to Kayon Jungle Resort (~2–2.5 hrs depending on traffic)."},{time:"1:30 AM",text:"Check-in, light room service, hydrate, early rest. No alarm needed — decompress."}],
-    meals:[{type:"Late dinner",name:"Kayon room service",note:"Light and easy after long travel"},{type:"Or",name:"The Firefly Restaurant",note:"Kayon's in-house restaurant (if open late)"}],
-    budget:{low:"$30",med:"$70",high:"$120"},budgetNote:"Includes private transfer + light meal",
-    links:[{text:"Klook airport transfers",url:"https://www.klook.com"},{text:"Viator transfers",url:"https://www.viator.com"}],
-    alt:null,tip:"Pre-book your airport transfer — avoid unmetered taxis at DPS."},
-  { label:"Day 2", date:"Sat · Sept 19", title:"Tegalalang rice terraces + Bali Swing", badge:{text:"Excursion",cls:"badge-teal"},
-    timeline:[{time:"8:00 AM",text:"Leisurely breakfast at Kayon."},{time:"9:00 AM",text:"Private driver to Tegalalang Rice Terraces (~20–30 min). Arrive early to beat crowds."},{time:"10:00 AM",text:"Bali Swing — iconic photo stop. Book a specific time slot in advance."},{time:"12:30 PM",text:"Lunch break at Karsa Kafe or local warung with terrace views."},{time:"2:30 PM",text:"Ubud orientation: Saraswati Temple, Ubud Palace stroll."},{time:"5:00 PM",text:"Return to Kayon — pool or spa unwind."},{time:"7:00 PM",text:"Dinner in Ubud."}],
-    meals:[{type:"Lunch (casual)",name:"Local warung near Tegalalang",note:"Nasi goreng, cheap & authentic"},{type:"Lunch (romantic)",name:"Karsa Kafe",note:"Rice terrace views, great for couples"},{type:"Dinner (casual)",name:"Warung Biah Biah",note:"Balinese home cooking"},{type:"Dinner (romantic)",name:"Locavore",note:"Fine-dining — reserve 2–3 weeks ahead"}],
-    budget:{low:"$50",med:"$140",high:"$260"},
-    links:[{text:"Bali Swing official",url:"https://www.baliswing.com"},{text:"Klook – Bali Swing",url:"https://www.klook.com"},{text:"Karsa Kafe",url:"https://www.karsakafe.com"},{text:"Locavore",url:"https://www.locavore.co.id"}],
-    alt:"Alt: Skip Bali Swing if sold out — substitute Alas Harum Bali Swing (Klook).",tip:"Bali Swing slots fill up — book at least a week ahead."},
-  { label:"Day 3", date:"Sun · Sept 20", title:"Sacred Monkey Forest + cooking class", badge:{text:"Cultural",cls:"badge-teal"},
-    timeline:[{time:"6:30 AM",text:"Optional early Campuhan Ridge walk (cool morning, ~1.5 hrs, easy trail)."},{time:"9:00 AM",text:"Sacred Monkey Forest — arrive early (~1–1.5 hrs). Keep bags secure!"},{time:"10:30 AM",text:"Balinese cooking class at Paon Bali or Casa Luna (~3–4 hrs). Visit market, cook traditional dishes."},{time:"1:30 PM",text:"Lunch included in cooking class."},{time:"3:00 PM",text:"Ubud Art Market — browse batik, carvings, jewellery."},{time:"5:00 PM",text:"Return to Kayon — optional hotel yoga session."},{time:"7:00 PM",text:"Dinner."}],
-    meals:[{type:"Lunch",name:"Included in cooking class",note:"You cook it, you eat it!"},{type:"Dinner (casual)",name:"Clear Cafe",note:"Healthy, vegetarian-friendly Ubud staple"},{type:"Dinner (romantic)",name:"Bridges Bali",note:"Riverside tables, stunning gorge views"}],
-    budget:{low:"$65",med:"$150",high:"$270"},
-    links:[{text:"Paon Bali cooking class",url:"https://paonbali.com"},{text:"Casa Luna cooking",url:"https://casalunabali.com"},{text:"Bridges Bali",url:"https://www.bridgesbali.com"}],
-    alt:"Alt: Swap cooking class for a guided Ubud city tour if fatigued.",tip:"Lock bags at the Monkey Forest — macaques are clever thieves."},
-  { label:"Day 4", date:"Mon · Sept 21", title:"Waterfalls + artisan villages", badge:{text:"Nature",cls:"badge-teal"},
-    timeline:[{time:"8:00 AM",text:"Breakfast, then private driver to Tegenungan Waterfall (~30 min). Go early — crowd-free and best light."},{time:"9:00 AM",text:"Optional: add Tukad Cepung Waterfall (~1 hr from Ubud, cave waterfall)."},{time:"12:00 PM",text:"Lunch on the way back."},{time:"2:00 PM",text:"Visit Celuk village (silver jewellery) and Mas village (wood carvings)."},{time:"5:00 PM",text:"Return to Kayon, spa treatment recommended."},{time:"7:30 PM",text:"Dinner."}],
-    meals:[{type:"Lunch (casual)",name:"Local warung near waterfall",note:"Fresh coconut + simple rice dishes"},{type:"Lunch (romantic)",name:"Sari Organik",note:"Rice-field dining, organic menu — book ahead"},{type:"Dinner (casual)",name:"Naughty Nuri's Ubud",note:"Famous BBQ ribs, lively atmosphere"},{type:"Dinner (romantic)",name:"Mozaic",note:"Award-winning French-Balinese — reserve early"}],
-    budget:{low:"$55",med:"$140",high:"$280"},
-    links:[{text:"Sari Organik",url:"https://www.sariorganikubud.com"},{text:"Mozaic reservations",url:"https://www.mozaic-bali.com"}],
-    alt:"Alt: Substitute Tibumana Waterfall (less visited, more romantic) for Tegenungan.",tip:"Wear water shoes at waterfalls — rocks can be slippery."},
-  { label:"Day 5", date:"Tue · Sept 22", title:"Mount Batur sunrise trek", badge:{text:"Adventure",cls:"badge-amber"},
-    timeline:[{time:"2:00 AM",text:"Private driver picks you up from Kayon — drive to Kintamani (~1.5 hrs)."},{time:"4:00 AM",text:"Begin guided Mount Batur sunrise trek (2 hrs up). Witness sunrise over the caldera."},{time:"7:00 AM",text:"Summit breakfast (eggs cooked on volcanic steam)."},{time:"9:00 AM",text:"Descend, drive to Toya Devasya hot springs to soak tired muscles."},{time:"12:00 PM",text:"Brunch/lunch at hot springs or Kintamani viewpoint cafe."},{time:"2:00 PM",text:"Return to Kayon — rest of day totally free. Nap, spa, pool."},{time:"7:00 PM",text:"Easy, low-key dinner."}],
-    meals:[{type:"Summit breakfast",name:"Volcanic steam eggs",note:"Included with guided trek — memorable!"},{type:"Lunch (casual)",name:"Toya Devasya hot springs cafe",note:"Buffet lunch with lake views"},{type:"Dinner (casual)",name:"Hujan Locale",note:"Modern Indonesian, relaxed vibe"},{type:"Dinner (romantic)",name:"Locavore or Mozaic",note:"If you still have energy — reserve in advance"}],
-    budget:{low:"$90",med:"$200",high:"$340"},
-    links:[{text:"Mount Batur trek – Klook",url:"https://www.klook.com"},{text:"Viator Mount Batur",url:"https://www.viator.com"}],
-    alt:"Alt: If you prefer sleep, swap for a late-start Ubud Art Market + spa day.",tip:"Bring a headlamp, warm layer for summit, and good shoes."},
-  { label:"Day 6", date:"Wed · Sept 23", title:"Jungle ATV + ethical elephant experience", badge:{text:"Excursion",cls:"badge-amber"},
-    timeline:[{time:"8:00 AM",text:"Pickup from Kayon for jungle ATV tour (~half-day, 2–3 hrs on track). Muddy, fun, beautiful jungle scenery."},{time:"12:00 PM",text:"Lunch (often included with ATV package or nearby warung)."},{time:"1:30 PM",text:"Ethical elephant experience — Mason Elephant Park (Taro, ~15 min from ATVs). Up-close interaction, no riding."},{time:"4:00 PM",text:"Return to Kayon, refresh."},{time:"7:00 PM",text:"Dinner in Ubud."}],
-    meals:[{type:"Lunch (casual)",name:"Included with ATV or local warung",note:"Usually nasi goreng + drinks"},{type:"Dinner (casual)",name:"Warung Lokal",note:"Simple Balinese, close to Ubud centre"},{type:"Dinner (romantic)",name:"Bridges Bali",note:"Gorge-side, romantic atmosphere"}],
-    budget:{low:"$120",med:"$240",high:"$380"},
-    links:[{text:"ATV tours – Klook",url:"https://www.klook.com"},{text:"ATV tours – Viator",url:"https://www.viator.com"}],
-    alt:"Alt: Swap ATV for Bali off-road cycling if you want a gentler ride.",tip:"Mason Elephant Park (Taro) is widely considered the most ethical option — verify no riding before booking."},
-  { label:"Day 7", date:"Thu · Sept 24", title:"Nusa Penida full-day trip", badge:{text:"Island day",cls:"badge-blue"},
-    timeline:[{time:"5:00 AM",text:"Private driver departs Kayon to Sanur harbour (~45–60 min)."},{time:"6:30 AM",text:"Fast boat to Nusa Penida (~45 min). On-island private driver/jeep meets you at port."},{time:"8:00 AM",text:"Kelingking Beach viewpoint (iconic T-Rex cliff) — arrive early before crowds."},{time:"10:30 AM",text:"Angel's Billabong + Broken Beach (natural rock arch pool)."},{time:"12:30 PM",text:"Lunch on island."},{time:"2:00 PM",text:"Crystal Bay — swim, snorkel (gear available locally)."},{time:"4:30 PM",text:"Return fast boat to Sanur → private driver back to Kayon (~2 hrs total)."},{time:"7:30 PM",text:"Light hotel dinner or easy Ubud restaurant."}],
-    meals:[{type:"Lunch (casual)",name:"Beachside warung, Nusa Penida",note:"Fresh grilled fish on the island"},{type:"Dinner (casual)",name:"Kayon Firefly Restaurant",note:"Easy recovery dinner at hotel"},{type:"Dinner (romantic)",name:"Bridges Bali",note:"If energy allows — book ahead"}],
-    budget:{low:"$130",med:"$260",high:"$420"},
-    links:[{text:"Nusa Penida – Klook",url:"https://www.klook.com"},{text:"Maruti Express speedboat",url:"https://marutiexpress.com"},{text:"GetYourGuide Nusa Penida",url:"https://www.getyourguide.com"}],
-    alt:"Alt: If seas are rough (Sept can have swells), swap for Ubud temple circuit day.",tip:"Book the speedboat as a package including on-island driver. Bring motion-sickness pills."},
-  { label:"Day 8", date:"Fri · Sept 25", title:"Water sports + Jimbaran sunset dinner", badge:{text:"Beach day",cls:"badge-coral"},
-    timeline:[{time:"8:30 AM",text:"Breakfast at Kayon."},{time:"9:30 AM",text:"Private driver to Tanjung Benoa (~1.5 hrs). Jet ski, parasailing, banana boat, or island hopping."},{time:"11:00 AM",text:"Jet ski session + optional boat island tour around Turtle Island."},{time:"1:00 PM",text:"Beachside lunch at Tanjung Benoa."},{time:"3:00 PM",text:"Drive to Jimbaran (~30 min)."},{time:"5:30 PM",text:"Jimbaran Bay — golden-hour cocktails on the beach."},{time:"7:00 PM",text:"Sunset dinner at Jimbaran seafood cafes — sand, candles, fresh grilled seafood."},{time:"9:00 PM",text:"Private driver back to Ubud (~1.5–2 hrs)."}],
-    meals:[{type:"Lunch (casual)",name:"Warung at Tanjung Benoa",note:"Simple beachside lunch between activities"},{type:"Dinner (casual)",name:"Jimbaran beachfront seafood warungs",note:"Tables on sand, fresh grilled fish by firelight"},{type:"Dinner (romantic)",name:"Private beachfront table",note:"Arrange via hotel concierge for roses/candles setup"}],
-    budget:{low:"$130",med:"$270",high:"$500"},
-    links:[{text:"Tanjung Benoa water sports – Klook",url:"https://www.klook.com"},{text:"Viator water sports Bali",url:"https://www.viator.com"}],
-    alt:"Alt: Swap jet ski for a quiet snorkeling boat tour if you prefer something calmer.",tip:"Book the Jimbaran romantic setup via your Kayon concierge a few days ahead."},
-  { label:"Day 9", date:"Sat · Sept 26", title:"Temple circuit + Ubud city tour", badge:{text:"Cultural",cls:"badge-teal"},
-    timeline:[{time:"8:30 AM",text:"Private driver to Tirta Empul — Bali's most sacred Hindu water temple. Witness purification ritual."},{time:"10:30 AM",text:"Gunung Kawi — 11th-century royal shrines carved into cliff face."},{time:"12:30 PM",text:"Lunch with rice-paddy views."},{time:"2:00 PM",text:"Goa Gajah (Elephant Cave) — ancient meditation cave, bathing pools."},{time:"3:30 PM",text:"ARMA Museum or Blanco Renaissance Museum, Luwak coffee plantation tasting."},{time:"5:30 PM",text:"Ubud Palace or Saraswati Temple for late-afternoon photos."},{time:"7:00 PM",text:"Dinner."}],
-    meals:[{type:"Lunch (casual)",name:"Bebek Tepi Sawah",note:"Duck dishes with rice-paddy views"},{type:"Lunch (romantic)",name:"Sari Organik",note:"Organic rice-field dining (pre-book)"},{type:"Dinner (casual)",name:"Bebek Bengil (Dirty Duck)",note:"Iconic Ubud restaurant, crispy duck"},{type:"Dinner (romantic)",name:"Indus Restaurant",note:"Ridge views, Indonesian-global menu"}],
-    budget:{low:"$60",med:"$150",high:"$280"},
-    links:[{text:"Ubud city tour – Klook",url:"https://www.klook.com"},{text:"Bebek Bengil",url:"https://www.bebekbengil.co.id"},{text:"Indus Restaurant",url:"https://www.indusvilla.com"}],
-    alt:"Alt: Skip Goa Gajah if temple-fatigued; substitute Penglipuran traditional village.",tip:"Wear a sarong and sash at all temples — provided at entrance for a small fee."},
-  { label:"Day 10", date:"Sun · Sept 27", title:"Couples spa + romantic farewell evening", badge:{text:"Relaxation",cls:"badge-coral"},
-    timeline:[{time:"9:00 AM",text:"Leisurely breakfast at Kayon."},{time:"10:30 AM",text:"Couples spa treatment at Kayon or nearby top spa (Karsa Spa, Fivelements, or Four Seasons day spa)."},{time:"1:00 PM",text:"Lunch — revisit a favourite cafe or try somewhere new."},{time:"3:00 PM",text:"Optional: private couples photoshoot in rice fields. Or last-minute artisan market shopping."},{time:"5:30 PM",text:"Sunset cocktails at Kayon infinity pool."},{time:"7:30 PM",text:"Farewell dinner — one of Bali's finest tables. Reserve weeks in advance."}],
-    meals:[{type:"Lunch (casual)",name:"Clear Cafe or Lazy Cats Cafe",note:"Relaxed revisit to a favourite spot"},{type:"Dinner (romantic — top pick)",name:"Mozaic Restaurant",note:"Award-winning, tasting menu — reserve now"},{type:"Dinner (alt romantic)",name:"Locavore",note:"Modern Indonesian tasting menu — also reserve early"}],
-    budget:{low:"$90",med:"$250",high:"$500"},
-    links:[{text:"Mozaic reservations",url:"https://www.mozaic-bali.com"},{text:"Locavore reservations",url:"https://www.locavore.co.id"},{text:"Photographers – Flytographer",url:"https://www.flytographer.com"}],
-    alt:"Alt: In-villa private dinner arranged by Kayon concierge (candles, flowers, bespoke menu).",tip:"Book your farewell dinner (Mozaic or Locavore) as soon as possible — often fully reserved weeks ahead."},
-  { label:"Dep.", date:"Mon · Sept 28", title:"Check-out & departure to DPS", badge:{text:"Departure",cls:"badge-blue"},
-    timeline:[{time:"8:00 AM",text:"Leisurely final breakfast at Kayon. Request late check-out (until 2:00 PM) when you check in."},{time:"12:00 PM",text:"Pack, final photos around resort."},{time:"2:00 PM",text:"Check-out. Private driver departs Kayon for Ngurah Rai Airport (DPS)."},{time:"4:30 PM",text:"Arrive DPS. Aim to be checked in by 5:00 PM (3 hrs before departure)."},{time:"7:45 PM",text:"Flight DPS → JFK departs. Arrive JFK Sept 29 at 8:50 AM."}],
-    meals:[{type:"Breakfast",name:"Kayon Firefly Restaurant",note:"Final leisurely breakfast with jungle views"},{type:"Airport",name:"DPS terminal restaurants",note:"Quick bite before boarding if needed"}],
-    budget:{low:"$60",med:"$120",high:"$200"},budgetNote:"Includes private airport transfer",
-    links:[{text:"Klook airport transfers",url:"https://www.klook.com"},{text:"Blue Bird Taxi app",url:"https://www.bluebirdgroup.com"}],
-    alt:null,tip:"Leave Kayon by 2:00 PM to be safe — Sept traffic on the Ubud–Denpasar road can be heavy."}
+  {
+    label:"Day 1", date:"Fri · Sept 18", title:"Arrival & Rest", badge:{text:"Arrival",cls:"badge-blue"},
+    timeline:[
+      {time:"10:25 PM", text:"Land at Ngurah Rai International Airport (DPS). Clear immigration and collect bags."},
+      {time:"11:00 PM", text:"Private driver pickup — look for your name sign at arrivals. Transfer to Kayon Jungle Resort (~2–2.5 hrs depending on traffic)."},
+      {time:"1:30 AM", text:"Check in, light room service or snack, hydrate, and rest. No alarm needed — you've just flown from JFK."}
+    ],
+    meals:[
+      {type:"Late dinner", name:"Kayon room service", note:"Light and easy after the long flight"},
+      {type:"Or", name:"The Firefly Restaurant", note:"Kayon's in-house restaurant, if still open on arrival"}
+    ],
+    budget:{low:"$30", med:"$70", high:"$120"}, budgetNote:"Includes private airport transfer + light meal",
+    links:[
+      {text:"Klook airport transfers", url:"https://www.klook.com"},
+      {text:"Viator transfers", url:"https://www.viator.com"}
+    ],
+    alt:null,
+    tip:"Pre-book your airport transfer before leaving home — avoid unmetered taxis at DPS arrivals."
+  },
+  {
+    label:"Day 2", date:"Sat · Sept 19", title:"Sacred Monkey Forest + Ubud City Tour", badge:{text:"Cultural",cls:"badge-teal"},
+    timeline:[
+      {time:"8:00 AM", text:"Breakfast at Kayon's Firefly Restaurant — take your time, easy morning."},
+      {time:"9:00 AM", text:"Private driver → Sacred Monkey Forest (~10 min from Kayon). Arrive at opening to beat crowds. Explore the jungle sanctuary with 700+ macaques roaming free (~1.5 hrs). Keep bags zipped and sunglasses in your pocket!"},
+      {time:"10:45 AM", text:"Walk to Ubud Palace (Puri Saren Agung) — ornate 19th-century royal compound, free to enter. Browse the carved gates and courtyards (~30 min)."},
+      {time:"11:30 AM", text:"Stroll Jalan Raya Ubud — Ubud's vibrant main street. Browse local galleries, artisan shops, and take in the atmosphere (~45 min)."},
+      {time:"1:00 PM", text:"Lunch at Akasa Cafe — rooftop setting with sweeping Ubud views, ideal for a relaxed couple's lunch."},
+      {time:"2:30 PM", text:"Ubud Art Market — handmade batik, wood carvings, silver jewellery, and local crafts. Great spot for gifts and souvenirs (~1 hr)."},
+      {time:"3:45 PM", text:"Saraswati Temple — beautiful lotus-filled pond in front of the temple, free to visit. Lovely late-afternoon light for photos (~20 min)."},
+      {time:"4:15 PM", text:"Private driver returns to Kayon (~10 min). Pool, spa, or relax at the resort."},
+      {time:"7:00 PM", text:"Dinner in Ubud."}
+    ],
+    meals:[
+      {type:"Lunch (top pick)", name:"Akasa Cafe", note:"Rooftop views over Ubud, Indonesian & Western menu, great for couples"},
+      {type:"Dinner (casual)", name:"Warung Biah Biah", note:"Balinese home cooking, affordable and authentic"},
+      {type:"Dinner (romantic)", name:"Locavore", note:"Award-winning fine dining — reserve 2–3 weeks ahead"}
+    ],
+    budget:{low:"$45", med:"$130", high:"$240"},
+    links:[
+      {text:"Akasa Cafe", url:"https://www.tripadvisor.com/Restaurant_Review-g297701-d12763190-Reviews-Akasa_Cafe-Ubud_Ubud_District_Bali.html"},
+      {text:"Monkey Forest tickets", url:"https://www.monkeyforestubud.com"},
+      {text:"Locavore reservations", url:"https://www.locavore.co.id"}
+    ],
+    alt:"Alt: Swap the Art Market for a 45-min Luwak coffee plantation tasting if browsing crafts isn't your thing.",
+    tip:"The Monkey Forest is only a 10-min walk from Ubud Palace and the Art Market — you can do all three on foot after the forest."
+  },
+  {
+    label:"Day 3", date:"Sun · Sept 20", title:"Bali Secret Waterfall Tour — Private & All-Inclusive", badge:{text:"Nature",cls:"badge-teal"},
+    timeline:[
+      {time:"7:30 AM", text:"Light breakfast at Kayon before pickup. The tour runs 8–10 hrs so eat a proper meal. Bottled water is provided throughout the day."},
+      {time:"8:00 AM", text:"ForeverVacation private guide and driver pick you up directly from Kayon Jungle Resort — Ubud is a confirmed pickup zone. No separate driver needed today; transport is fully included. Comfortable private air-conditioned vehicle."},
+      {time:"10:00 AM", text:"Leke Leke Waterfall (1 hr) — a stunning single-drop jungle waterfall hidden in a lush gorge. Short trail down to the base. Cool and quiet — rarely crowded this early. Admission included. Swim in the natural pool if you like."},
+      {time:"11:00 AM", text:"Banyumala Twin Waterfalls (1 hr) — two waterfalls cascading side by side into a crystal-clear pool, one of the most photogenic spots in Bali. Admission included. Swimming here is a highlight. Note: involves steep steps down and back up."},
+      {time:"12:00 PM", text:"Lunch included — your guide takes you to a traditional Balinese restaurant, typically near Ulun Danu Bratan with beautiful lake views. Indonesian buffet, fully covered in the tour price. Reviewers consistently rave about the scenery here."},
+      {time:"2:00 PM", text:"Munduk Waterfall (2 hrs) — the most dramatic stop of the day. Set in Bali's cool northern highlands among coffee and clove plantations. The hike is the most demanding of the day (~58 flights of stairs equivalent per guest reviews) but the payoff is spectacular. Your guide stays with you the whole way."},
+      {time:"3:00 PM", text:"Banyu Wana Amertha Waterfall (1 hr) — four distinct cascades in a single jungle canyon, each with its own character and pool. You can swim here. An optional motorbike ride is available at this stop to skip the 30-min hike in (small extra fee)."},
+      {time:"4:00 PM", text:"Begin the return drive to Ubud. Pass by scenic viewpoints of Ulun Danu Bratan Temple and Jatiluwih terraced rice fields along the route — visible from the vehicle."},
+      {time:"6:00 PM", text:"Arrive back at Kayon Jungle Resort. Shower, rest, soak your feet — you've climbed the equivalent of a skyscraper today and it was absolutely worth it."},
+      {time:"7:30 PM", text:"Dinner — keep it easy and close to the hotel tonight. You'll be happily tired."}
+    ],
+    meals:[
+      {type:"Lunch (fully included)", name:"Local Balinese restaurant near Lake Bratan", note:"Traditional Indonesian buffet with stunning lake views — fully covered in tour price, no extra cost"},
+      {type:"Dinner (casual)", name:"Clear Cafe", note:"Light, healthy, easy — ideal after a long active day"},
+      {type:"Dinner (romantic)", name:"Bridges Bali", note:"Gorge-side setting — only if you have the energy. Reserve ahead."}
+    ],
+    budget:{low:"$109", med:"$160", high:"$220"}, budgetNote:"From $109/person all-inclusive via Viator (private transport from hotel, lunch, bottled water, all admission fees). Optional photographer add-on available.",
+    links:[
+      {text:"Book on Viator — from $109/person", url:"https://www.viator.com/tours/Seminyak/Bali-Secret-Waterfall-Tour/d34198-109615P7"},
+      {text:"Bridges Bali", url:"https://www.bridgesbali.com"}
+    ],
+    alt:"Alt: If it rains heavily, your guide can flex the itinerary — past guests report guides swapping a waterfall for Ulun Danu Bratan Temple or Sangeh Monkey Forest. Guides are highly rated for flexibility.",
+    tip:"Wear sturdy shoes with grip and clothes you can get wet. Bring a dry bag for your phone — your guide will take photos for you at each waterfall. Rated 99% recommended across 708 reviews. Books up ~40 days in advance — reserve as soon as possible."
+  },
+  {
+    label:"Day 4", date:"Mon · Sept 21", title:"Jungle ATV Tour + Mason Elephant Park", badge:{text:"Adventure",cls:"badge-amber"},
+    timeline:[
+      {time:"8:00 AM", text:"Breakfast at Kayon."},
+      {time:"9:00 AM", text:"Private driver → ATV operator base in the Ubud area (~15–20 min). Many operators offer hotel pickup — confirm when booking."},
+      {time:"9:30 AM", text:"Jungle ATV tour begins — ride through rice paddies, jungle trails, river crossings, and local villages (~2.5–3 hrs). Helmets, gear, and safety briefing provided. Great fun for couples — expect to get muddy!"},
+      {time:"12:00 PM", text:"Lunch at the ATV base (usually included in the package) or at a nearby warung."},
+      {time:"1:15 PM", text:"Private driver → Mason Elephant Park, Taro (~15–20 min from most ATV sites). Strategically close — the most efficient same-day pairing."},
+      {time:"1:45 PM", text:"Mason Elephant Park — Bali's most reputable ethical elephant sanctuary. Feed, bathe, and interact up close with rescued Sumatran elephants (~2 hrs). No riding. Welfare-first approach, widely praised."},
+      {time:"4:00 PM", text:"Private driver returns to Kayon (~20 min). Refresh, shower, relax at the resort."},
+      {time:"7:00 PM", text:"Dinner in Ubud."}
+    ],
+    meals:[
+      {type:"Lunch (casual)", name:"Included with ATV package or local warung", note:"Usually nasi goreng, satay, cold drinks"},
+      {type:"Dinner (casual)", name:"Naughty Nuri's Ubud", note:"Famous BBQ ribs — hearty after an active day"},
+      {type:"Dinner (romantic)", name:"Mozaic Restaurant", note:"Award-winning French-Balinese tasting menu — reserve early"}
+    ],
+    budget:{low:"$130", med:"$260", high:"$400"},
+    links:[
+      {text:"ATV tours – Klook", url:"https://www.klook.com"},
+      {text:"Mason Elephant Park", url:"https://www.masonadventures.com"},
+      {text:"ATV + Elephant combo – Viator", url:"https://www.viator.com"}
+    ],
+    alt:"Alt: Many operators offer an ATV + Elephant Park combo package — ask when booking, often cheaper than booking separately.",
+    tip:"Wear clothes you don't mind getting muddy for the ATV. Book Mason Elephant Park in advance — interaction slots fill up fast."
+  },
+  {
+    label:"Day 5", date:"Tue · Sept 22", title:"Rest + Explore Day", badge:{text:"Relaxed",cls:"badge-coral"},
+    timeline:[
+      {time:"9:00 AM", text:"Leisurely breakfast at Kayon. Slow morning — you've had two active days back to back."},
+      {time:"10:30 AM", text:"Campuhan Ridge Walk — easy 2km ridge trail through jungle and rice fields starting right near Ubud centre (~1.5 hrs). Great morning light and cool temperature."},
+      {time:"12:30 PM", text:"Lunch at Akasa Cafe (rooftop views) or a favourite spot from earlier in the trip."},
+      {time:"2:00 PM", text:"Afternoon free — spa treatment at Kayon, pool time, or browse the Ubud Art Market at a relaxed pace."},
+      {time:"4:00 PM", text:"Optional: visit Luwak coffee plantation (~20 min from Ubud) for a tasting of Bali's famous civet coffee (~45 min)."},
+      {time:"5:30 PM", text:"Return to Kayon. Sunset cocktails at the resort."},
+      {time:"7:00 PM", text:"Dinner — something romantic, you're halfway through the trip."}
+    ],
+    meals:[
+      {type:"Lunch (casual)", name:"Akasa Cafe", note:"Rooftop views, great for a relaxed mid-trip lunch"},
+      {type:"Lunch (alt)", name:"Clear Cafe", note:"Healthy, light, vegetarian-friendly"},
+      {type:"Dinner (romantic)", name:"Locavore", note:"If not used yet — one of Asia's best restaurants, reserve ahead"},
+      {type:"Dinner (casual)", name:"Hujan Locale", note:"Modern Indonesian, relaxed atmosphere in central Ubud"}
+    ],
+    budget:{low:"$40", med:"$120", high:"$260"},
+    links:[
+      {text:"Locavore reservations", url:"https://www.locavore.co.id"},
+      {text:"Kayon spa & experiences", url:"https://www.kayonjungleresort.com"}
+    ],
+    alt:"Alt: Use this day for any excursion that got rained out or pushed earlier in the trip.",
+    tip:"This buffer day is intentional — it sits between two demanding days (ATV/Elephant and Mount Batur). Don't fill it too heavily."
+  },
+  {
+    label:"Day 6", date:"Wed · Sept 23", title:"Mount Batur Jeep Sunrise + Black Lava Tour", badge:{text:"Adventure",cls:"badge-amber"},
+    timeline:[
+      {time:"3:00 AM", text:"Your Hire Bali Cab driver contacts you the evening before to confirm your exact pickup time. Wait in the Kayon lobby — pickup from Ubud is included in the tour price. No separate driver needed."},
+      {time:"3:00 AM", text:"Depart Kayon in your private air-conditioned vehicle → Mount Batur base (~1.5 hrs). This is the jeep tour — no trekking required. Ride comfortably in a classic 4WD off-road jeep up the volcanic slopes as the sky begins to lighten."},
+      {time:"5:00 AM", text:"Board your open-top 4WD jeep at the base and begin the off-road ascent of Mount Batur. The jeep climbs the rugged volcanic terrain as the first light appears over the horizon — a dramatic and memorable ride."},
+      {time:"5:45 AM", text:"Arrive at the sunrise viewpoint on Mount Batur. Watch the sunrise ignite over the caldera, Lake Batur, and Mount Agung — one of the most breathtaking panoramic views in all of Southeast Asia. No hike required — you're here in the jeep."},
+      {time:"6:30 AM", text:"Breakfast included — enjoy a meal at the viewpoint as the landscape comes fully to life in the morning light. Bottled water and breakfast are provided as part of the tour."},
+      {time:"7:30 AM", text:"The real adventure continues. Your jeep drives across the dramatic Black Lava fields — vast, otherworldly stretches of hardened lava formed by past volcanic eruptions. Your local guide explains the history and geology of this active volcano as you explore the unique landscape and take incredible photos."},
+      {time:"9:00 AM", text:"Begin the jeep descent back to the base. The entire Mount Batur experience lasts approximately 4 hours from arrival."},
+      {time:"9:30 AM", text:"Optional: ask your driver to stop at Toya Devasya Natural Hot Spring (~20 min away) to soak in geothermal pools with Lake Batur views — a perfect way to unwind after the early start."},
+      {time:"11:30 AM", text:"Driver returns you to Kayon Jungle Resort (~1.5 hrs). Total tour duration approximately 8 hrs from pickup."},
+      {time:"12:00 PM", text:"Arrive back at Kayon. Lunch at the resort, then afternoon completely free — pool, spa, or a long nap. You've earned it."},
+      {time:"7:00 PM", text:"Low-key dinner close to the hotel."}
+    ],
+    meals:[
+      {type:"Breakfast (included)", name:"At the Mount Batur viewpoint", note:"Breakfast fully included in tour price — eat at the summit as the sun rises"},
+      {type:"Lunch", name:"Kayon Firefly Restaurant", note:"Easy and relaxed back at the resort after a big morning"},
+      {type:"Dinner (casual)", name:"Hujan Locale", note:"Modern Indonesian, easy and relaxed near Ubud"},
+      {type:"Dinner (romantic)", name:"Mozaic", note:"Only if energy allows — reserve in advance"}
+    ],
+    budget:{low:"$40", med:"$80", high:"$140"}, budgetNote:"From $40.40/person via Viator — private tour, all-inclusive (jeep, breakfast, water, admission, hotel pickup). Exceptional value. High end includes optional hot springs stop.",
+    links:[
+      {text:"Book on Viator — from $40.40/person", url:"https://www.viator.com/tours/Ubud/Mount-Batur-Jeep-Sunrise-with-Black-Lava/d5467-123887P15"},
+      {text:"Toya Devasya hot springs", url:"https://www.toyadevasya.com"}
+    ],
+    alt:"Alt: This jeep tour is ideal if you want the Mount Batur sunrise experience without the 2-hour trek up and down. 100% recommended across all 36 reviews.",
+    tip:"Your driver will call or message you the evening before to confirm pickup time — make sure your phone is reachable. Bring a warm layer (cool pre-dawn at altitude) and your camera. Books up ~41 days in advance — reserve now."
+  },
+  {
+    label:"Day 7", date:"Thu · Sept 24", title:"Nusa Penida Island — Full Day", badge:{text:"Island day",cls:"badge-blue"},
+    timeline:[
+      {time:"6:30 AM", text:"Light breakfast at Kayon — eat before you go, options on the island are limited."},
+      {time:"7:15 AM", text:"Private driver departs Kayon → Sanur Harbour (~50–60 min). Early departure avoids Denpasar traffic buildup."},
+      {time:"8:15 AM", text:"Fast speedboat departs Sanur → Nusa Penida port (~35–45 min). On-island private driver/jeep meets you at Banjar Nyuh pier."},
+      {time:"9:15 AM", text:"Kelingking Beach viewpoint — the iconic T-Rex cliff. One of the most photographed spots in all of Indonesia. Arrive early before tour groups arrive. (~45 min at viewpoint; optional steep descent to the beach adds ~1 hr)."},
+      {time:"10:30 AM", text:"Angel's Billabong — natural infinity rock pool carved by the ocean. Stunning turquoise colours (~30 min)."},
+      {time:"11:15 AM", text:"Broken Beach — dramatic natural rock arch with a swirling turquoise lagoon inside (~30 min)."},
+      {time:"12:30 PM", text:"Lunch at a beachside warung on the island."},
+      {time:"2:00 PM", text:"Crystal Bay — swim and snorkel in clear, calm water. Snorkel gear available to rent locally. Best snorkeling on the island (~1.5 hrs)."},
+      {time:"4:00 PM", text:"On-island driver to port. Board return speedboat → Sanur (~45 min)."},
+      {time:"5:15 PM", text:"Private driver Sanur → Kayon (~50–60 min)."},
+      {time:"7:30 PM", text:"Easy dinner — you'll be tired but it will have been worth every minute."}
+    ],
+    meals:[
+      {type:"Breakfast", name:"Kayon — early light meal", note:"Eat before leaving — island warung options are basic"},
+      {type:"Lunch (casual)", name:"Beachside warung, Nusa Penida", note:"Fresh grilled fish and cold drinks on the island"},
+      {type:"Dinner (casual)", name:"Kayon Firefly Restaurant", note:"Easiest option after a long full day — dine at the resort"},
+      {type:"Dinner (romantic)", name:"Hujan Locale", note:"If you have the energy — modern Indonesian in central Ubud"}
+    ],
+    budget:{low:"$130", med:"$270", high:"$430"},
+    links:[
+      {text:"Nusa Penida day trip – Klook", url:"https://www.klook.com"},
+      {text:"Maruti Express speedboat", url:"https://marutiexpress.com"},
+      {text:"GetYourGuide Nusa Penida", url:"https://www.getyourguide.com"}
+    ],
+    alt:"Alt: If seas are rough (Sept can have swells), push to Day 9 and use this day for the spa + rest.",
+    tip:"Book a package that includes the speedboat AND on-island private driver — much easier than piecing it together. Bring motion-sickness tablets."
+  },
+  {
+    label:"Day 8", date:"Fri · Sept 25", title:"Recovery + Spa Day", badge:{text:"Relaxed",cls:"badge-coral"},
+    timeline:[
+      {time:"9:00 AM", text:"Slow breakfast at Kayon — you've done Nusa Penida and Mount Batur this week. This is your recovery day."},
+      {time:"10:30 AM", text:"Couple's spa treatment at Kayon Resort or nearby Karsa Spa (~2 hrs). Traditional Balinese massage, flower bath, and body scrub."},
+      {time:"1:00 PM", text:"Lunch — relaxed and nearby."},
+      {time:"2:30 PM", text:"Afternoon at leisure — Kayon infinity pool, resort grounds, or a short walk to the Petanu River below the resort."},
+      {time:"4:30 PM", text:"Optional: short private photography session in Kayon's rice field surroundings — beautiful late-afternoon light (~1 hr). Great keepsake for the trip."},
+      {time:"6:00 PM", text:"Sunset cocktails at Kayon's bar."},
+      {time:"7:30 PM", text:"Romantic dinner — save one of your best restaurant picks for tonight."}
+    ],
+    meals:[
+      {type:"Lunch (casual)", name:"Akasa Cafe", note:"A favourite revisit — rooftop views, relaxed pace"},
+      {type:"Lunch (alt)", name:"Sari Organik", note:"Organic rice-field dining, peaceful setting — book ahead"},
+      {type:"Dinner (romantic)", name:"Mozaic Restaurant", note:"Award-winning tasting menu — reserve well in advance"},
+      {type:"Dinner (alt)", name:"Bridges Bali", note:"Gorge-side setting, consistently excellent — reserve ahead"}
+    ],
+    budget:{low:"$80", med:"$220", high:"$480"},
+    links:[
+      {text:"Mozaic reservations", url:"https://www.mozaic-bali.com"},
+      {text:"Bridges Bali", url:"https://www.bridgesbali.com"},
+      {text:"Kayon spa", url:"https://www.kayonjungleresort.com"}
+    ],
+    alt:"Alt: Use this day for any excursion that got postponed due to weather earlier in the trip.",
+    tip:"Book the Mozaic or Bridges dinner as early as possible in the trip — both are frequently fully booked nights in advance."
+  },
+  {
+    label:"Day 9", date:"Sat · Sept 26", title:"Free Day + Farewell Dinner", badge:{text:"Relaxed",cls:"badge-coral"},
+    timeline:[
+      {time:"9:00 AM", text:"Leisurely breakfast at Kayon. Last full day — take it at your own pace."},
+      {time:"10:30 AM", text:"Morning at leisure — revisit a favourite spot, stroll through Ubud one last time, or simply relax at the resort pool."},
+      {time:"12:30 PM", text:"Lunch at Akasa Cafe or anywhere you haven't tried yet."},
+      {time:"2:00 PM", text:"Final souvenir shopping at Ubud Art Market or artisan shops on Jalan Raya Ubud. Pick up any last-minute gifts."},
+      {time:"4:00 PM", text:"Return to Kayon. Pack, take final photos around the resort grounds."},
+      {time:"6:00 PM", text:"Sunset cocktails at Kayon."},
+      {time:"7:30 PM", text:"Farewell dinner — your last night in Bali. Make it a special one."}
+    ],
+    meals:[
+      {type:"Lunch (casual)", name:"Akasa Cafe", note:"Rooftop farewell lunch with Ubud views"},
+      {type:"Dinner (top pick)", name:"Locavore", note:"One of Asia's best — if you haven't been yet, tonight's the night"},
+      {type:"Dinner (alt)", name:"Mozaic Restaurant", note:"Award-winning tasting menu — the ultimate farewell dinner"}
+    ],
+    budget:{low:"$60", med:"$180", high:"$400"},
+    links:[
+      {text:"Locavore reservations", url:"https://www.locavore.co.id"},
+      {text:"Mozaic reservations", url:"https://www.mozaic-bali.com"}
+    ],
+    alt:"Alt: Ask Kayon concierge to arrange a private in-villa candlelit dinner — flowers, bespoke menu, completely private.",
+    tip:"Reserve your farewell dinner on Day 1 of the trip. Locavore and Mozaic both book out days in advance."
+  },
+  {
+    label:"Dep.", date:"Mon · Sept 28", title:"Check-out & Departure to DPS", badge:{text:"Departure",cls:"badge-blue"},
+    timeline:[
+      {time:"8:00 AM", text:"Final breakfast at Kayon's Firefly Restaurant. Enjoy the jungle views one last time."},
+      {time:"10:00 AM", text:"Begin packing and checkout process. Request luggage storage if checking out before your driver arrives."},
+      {time:"12:00 PM", text:"Standard checkout. If your flight is late enough, request a late checkout (ask at check-in) or use the pool until departure."},
+      {time:"2:00 PM", text:"Private driver departs Kayon → Ngurah Rai Airport (DPS). Allow 2–2.5 hrs for the drive plus traffic buffer."},
+      {time:"4:30 PM", text:"Arrive at DPS. Check in, clear immigration, grab a last Bintang at the departure lounge."},
+      {time:"7:45 PM", text:"Flight DPS → JFK departs. Arrives New York Sept 29 at 8:50 AM. Safe travels!"}
+    ],
+    meals:[
+      {type:"Breakfast", name:"Kayon Firefly Restaurant", note:"Final breakfast with jungle and river valley views"},
+      {type:"Airport", name:"DPS terminal restaurants", note:"Quick bite before boarding if needed"}
+    ],
+    budget:{low:"$60", med:"$120", high:"$200"}, budgetNote:"Includes private airport transfer",
+    links:[
+      {text:"Klook airport transfers", url:"https://www.klook.com"},
+      {text:"Blue Bird Taxi app", url:"https://www.bluebirdgroup.com"}
+    ],
+    alt:null,
+    tip:"Leave Kayon no later than 2:00 PM — Sept traffic on the Ubud–Denpasar road can be unpredictable. Better early than rushed."
+  }
 ];
 
 const tabsEl = document.getElementById('tabs');
